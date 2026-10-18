@@ -1,0 +1,10 @@
+'use client';
+
+import { ErrorProps } from "next/error";
+
+export default function MealsErrorPage({ }: ErrorProps) {
+  return <main className="error">
+    <h1>An error occured</h1>
+    <p>Failed to fetch meal data. Please try again later.</p>
+  </main>
+}
