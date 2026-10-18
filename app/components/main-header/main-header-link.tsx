@@ -1,17 +1,17 @@
 'use client';
 
 import Link from "next/link";
-import classes from './main-header.module.css'
-import { usePathname } from "next/navigation";
-
-export type NavLinkProps = React.PropsWithChildren<{
-  href: string;
-}>
+import NavClientLink, { NavLinkProps } from "./main-header-client-link";
+import { Suspense } from "react";
 
 export default function NavLink({ href, children }: NavLinkProps) {
-  const path = usePathname();
-
   return (
-    <Link href={href} className={path.startsWith(href) ? classes.active : ''}>{children}</Link>
+    <Suspense fallback={
+      <Link href={href}>{children}</Link>
+    }>
+      <NavClientLink href={href}>
+        {children}
+      </NavClientLink>
+    </Suspense>
   )
 }
