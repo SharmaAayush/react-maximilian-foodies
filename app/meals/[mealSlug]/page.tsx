@@ -4,6 +4,8 @@ import classes from './page.module.css';
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+export const instant = false;
+
 export default async function MealDetailsPage({ params }: PageProps<'/meals/[mealSlug]'>) {
   const { mealSlug } = await params;
   const meal = await getMealBySlug(mealSlug);
