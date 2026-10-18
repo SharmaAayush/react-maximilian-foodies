@@ -56,7 +56,7 @@ export default function ImagePicker({ label, name }: ImagePickerProps) {
           required
           type="file"
           id={name}
-          accept='image/png, image.jpeg'
+          accept='image/png, image/jpeg'
           name={name}
           onChange={handleImageChange}
         />

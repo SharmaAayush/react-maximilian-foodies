@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'fs/promises';
 
 import sql from 'better-sqlite3';
 import slugify from 'slugify';
@@ -16,6 +16,8 @@ export type Meal = {
   creator_email: string;
   instructions: string;
 }
+
+const SUPPORTED_EXTENSIONS = ['jpeg', 'png'];
 
 export async function getMeals(): Promise<Meal[]> {
   await new Promise(resolve => setTimeout(resolve, 2000));
@@ -42,17 +44,17 @@ export async function saveMeal(
 
   const image = meal.image as File;
 
-  const extension = image.name.split('.').pop();
+  const imageExtension = image.name.split('.').pop();
+  const extension = SUPPORTED_EXTENSIONS.includes(imageExtension || '') ? imageExtension : 'jpeg';
   const fileName = `${meal.slug}.${extension}`;
 
-  const stream = fs.createWriteStream(`public/images/${fileName}`);
   const bufferedImage = await image.arrayBuffer();
 
-  stream.write(Buffer.from(bufferedImage), (error) => {
-    if (error) {
-      throw new Error('Saving image failed');
-    }
-  });
+  try {
+    await fs.writeFile(`public/images/${fileName}`, Buffer.from(bufferedImage));
+  } catch (error) {
+    throw new Error(`Failed to save meal image: ${error instanceof Error ? error.message : error}`);
+  }
 
   meal.image = `/images/${fileName}`;
 
